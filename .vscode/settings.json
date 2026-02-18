@@ -1,0 +1,7 @@
+{
+    {
+    "python.analysis.extraPaths": [
+        "C:/Users/you/Envs/myenv/Lib/site-packages"
+    ]
+}
+}
