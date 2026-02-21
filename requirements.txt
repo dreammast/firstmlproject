@@ -8,6 +8,6 @@ catboost
 xgboost
 dill
 flask
-streamlit
+streamlit>=1.28.0
 altair==4.2.2
 -e .
