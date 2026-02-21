@@ -11,6 +11,7 @@ from xgboost import XGBRegressor
 from src.exception import CustomException
 from src.logger import logging
 from src.utils import save_object, evaluate_model
+from src.components.model_params import model_params
 
 
 @dataclass
@@ -32,14 +33,14 @@ class ModelTrainer:
             )
 
             models = {
-                "Random Forest": RandomForestRegressor(),
-                "Decision Tree": DecisionTreeRegressor(),
-                "Gradient Boosting": GradientBoostingRegressor(),
-                "Linear Regression": LinearRegression(),
-                "K-Neighbors Regressor": KNeighborsRegressor(),
-                "XGBRegressor": XGBRegressor(),
-                "CatBoosting Regressor": CatBoostRegressor(verbose=False),
-                "AdaBoost Regressor": AdaBoostRegressor()
+                "Random Forest": RandomForestRegressor(**model_params["Random Forest"]),
+                "Decision Tree": DecisionTreeRegressor(**model_params["Decision Tree"]),
+                "Gradient Boosting": GradientBoostingRegressor(**model_params["Gradient Boosting"]),
+                "Linear Regression": LinearRegression(**model_params["Linear Regression"]),
+                "K-Neighbors Regressor": KNeighborsRegressor(**model_params["K-Neighbors Regressor"]),
+                "XGBRegressor": XGBRegressor(**model_params["XGBRegressor"]),
+                "CatBoosting Regressor": CatBoostRegressor(**model_params["CatBoosting Regressor"]),
+                "AdaBoost Regressor": AdaBoostRegressor(**model_params["AdaBoost Regressor"])
             }
 
             models_report : dict=evaluate_model(X_train = X_train, y_train = y_train, X_test = X_test, y_test = y_test, models = models)
