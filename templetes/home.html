@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Math Score Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .container-custom {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            border: none;
+            border-radius: 15px;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .card-header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .card-header p {
+            margin: 10px 0 0 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        
+        .form-control, .form-select {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 576px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #333;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .btn-predict {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            width: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .btn-predict:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        
+        .btn-predict:active {
+            transform: translateY(-1px);
+        }
+        
+        .result-container {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+            border-left: 5px solid #667eea;
+        }
+        
+        .result-container.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .result-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+        
+        .result-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            border-radius: 8px;
+        }
+        
+        .info-text {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-custom">
+        <div class="card">
+            <div class="card-header">
+                <h1>📚 Student Math Score Predictor</h1>
+                <p>Predict student math scores based on their academic profile</p>
+            </div>
+            
+            <div class="card-body" style="padding: 40px;">
+                <form id="predictionForm" method="POST" action="/predict">
+                    <!-- Demographic Information -->
+                    <div class="section-title">👤 Demographic Information</div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select class="form-select" id="gender" name="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="race_ethnicity" class="form-label">Race/Ethnicity</label>
+                            <select class="form-select" id="race_ethnicity" name="race_ethnicity" required>
+                                <option value="">Select Race/Ethnicity</option>
+                                <option value="group A">Group A</option>
+                                <option value="group B">Group B</option>
+                                <option value="group C">Group C</option>
+                                <option value="group D">Group D</option>
+                                <option value="group E">Group E</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Parent Education & Lunch Information -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="parental_level_of_education" class="form-label">Parental Level of Education</label>
+                            <select class="form-select" id="parental_level_of_education" name="parental_level_of_education" required>
+                                <option value="">Select Education Level</option>
+                                <option value="some high school">Some High School</option>
+                                <option value="high school">High School</option>
+                                <option value="some college">Some College</option>
+                                <option value="associate degree">Associate Degree</option>
+                                <option value="bachelor degree">Bachelor Degree</option>
+                                <option value="master degree">Master Degree</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lunch" class="form-label">Lunch Type</label>
+                            <select class="form-select" id="lunch" name="lunch" required>
+                                <option value="">Select Lunch Type</option>
+                                <option value="standard">Standard</option>
+                                <option value="free/reduced">Free/Reduced</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Test & Academic Scores -->
+                    <div class="section-title">📊 Academic Performance</div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reading_score" class="form-label">Reading Score (0-100)</label>
+                            <input type="number" class="form-control" id="reading_score" name="reading_score" 
+                                   min="0" max="100" step="1" required placeholder="Enter reading score">
+                            <div class="info-text">Your current reading score</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="writing_score" class="form-label">Writing Score (0-100)</label>
+                            <input type="number" class="form-control" id="writing_score" name="writing_score" 
+                                   min="0" max="100" step="1" required placeholder="Enter writing score">
+                            <div class="info-text">Your current writing score</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Test Preparation -->
+                    <div class="form-group">
+                        <label for="test_preparation_course" class="form-label">Test Preparation Course</label>
+                        <select class="form-select" id="test_preparation_course" name="test_preparation_course" required>
+                            <option value="">Select Test Preparation Status</option>
+                            <option value="none">None</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                        <div class="info-text">Whether you completed a test preparation course</div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-predict">🎯 Predict Math Score</button>
+                </form>
+                
+                <!-- Result Display -->
+                <div class="result-container" id="resultContainer">
+                    <div class="alert alert-success" role="alert">
+                        ✓ Prediction Completed Successfully!
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <div class="result-label">Predicted Math Score:</div>
+                        <div class="result-value" id="predictionResult">0</div>
+                        <div class="info-text">Based on the input features and trained ML model</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = {
+                gender: document.getElementById('gender').value,
+                race_ethnicity: document.getElementById('race_ethnicity').value,
+                parental_level_of_education: document.getElementById('parental_level_of_education').value,
+                lunch: document.getElementById('lunch').value,
+                test_preparation_course: document.getElementById('test_preparation_course').value,
+                reading_score: parseFloat(document.getElementById('reading_score').value),
+                writing_score: parseFloat(document.getElementById('writing_score').value)
+            };
+            
+            // Send prediction request
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.math_score !== undefined) {
+                    document.getElementById('predictionResult').textContent = 
+                        data.math_score.toFixed(2);
+                    document.getElementById('resultContainer').classList.add('show');
+                    
+                    // Scroll to result
+                    document.getElementById('resultContainer').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert('Error: ' + (data.error || 'Failed to get prediction'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error occurred while making prediction');
+            });
+        });
+    </script>
+</body>
+</html>
